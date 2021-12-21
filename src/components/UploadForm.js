@@ -4,7 +4,7 @@ import styles from "./UploadForm.module.css";
 import { toast } from "react-toastify";
 import ProgressBar from "./ProgressBar.js";
 
-const UploadForm = () => {
+const UploadForm = ({ images, setImages }) => {
   const defaultFileName = "이미지 파일을 업로드해주세요";
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(defaultFileName);
@@ -21,7 +21,7 @@ const UploadForm = () => {
        * client의 package.json 에서 proxy 설정
        * : proxy : "http://localhost:5000"
        */
-      const response = await axios.post("/upload", formData, {
+      const response = await axios.post("/images", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (ProgressEvent) => {
           setPercent(
@@ -31,6 +31,7 @@ const UploadForm = () => {
         },
       });
 
+      setImages([...images], response.data);
       toast.success("이미지 업로드 성공😘", { autoClose: 2500 });
       setTimeout(() => {
         setPercent(0);
@@ -83,6 +84,7 @@ const UploadForm = () => {
           padding: "10px 20px",
           borderRadius: "5px",
           width: "100%",
+          fontWeight: "bold",
         }}
       >
         제출
